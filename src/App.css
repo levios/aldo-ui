@@ -1,0 +1,40 @@
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+  
+  .submit-form {
+    max-width: 300px;
+    margin: auto;
+  }
+  
+  .edit-form {
+    margin: 10px;
+  }
+
+.list {
+    position: absolute;
+    width: 100%;
+    height: 400px;
+}
+
+.div1 {
+    float:left;
+    position: relative;
+    width: 100%;
+    background:rgb(233, 220, 222);
+    clear:left;
+    height: 400px;
+}
+  
+.div2 {
+    margin-top:50px;
+    float:left;
+    position: relative;
+    width: 100%;
+    background:lightblue;
+    clear:left;
+}
