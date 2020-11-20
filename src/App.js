@@ -14,6 +14,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 
 import PersonList from "./components/person-list.component";
 import EltuntSzemely from "./components/eltunt-person.component";
+import Szemely from "./components/person.component";
 import TalaltHolttest from "./components/talalt-person.component";
 
 import Radio from '@material-ui/core/Radio';
@@ -247,8 +248,8 @@ const App = () => {
 							{ (selectedId == -1 && !coord) ? (
 								<div>Hozzon létre új elemet, vagy válasszon ki egyet a listából ...</div>
 							) : (
-								(!coord) ? (
-									(szemelyTipus) ? (<TalaltHolttest id1={selectedId} />) : (<EltuntSzemely id1={selectedId}  />) 
+								(selectedId != -1) ? (
+									<Szemely id1={selectedId} />
 								) : (
 									(szemelyTipus) ? (<TalaltHolttest coor={coord}  />) : (<EltuntSzemely coor={coord}  />)
 								)
