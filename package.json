@@ -14,9 +14,12 @@
     "react-bootstrap": "^1.4.0",
     "react-contextmenu": "2.14.0",
     "react-dom": "^16.13.1",
+    "react-lightbox-component": "^1.2.1",
     "react-list": "^0.8.16",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.3",
+    "react-simple-image-viewer": "0.0.7",
+    "react-viewer": "^3.2.2",
     "styled-components": "^5.2.1"
   },
   "scripts": {

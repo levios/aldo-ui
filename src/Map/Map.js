@@ -11,10 +11,14 @@ import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';
 
 import VectorSource from 'ol/source/Vector.js'
 import {Circle as CircleStyle, Fill, Icon, Stroke, Style} from 'ol/style.js';
+import { coordinateRelationship } from "ol/extent";
 
-const Map = ({ children, zoom, center, szemely_type, cb1 }) => {
+const Map = ({ children, zoom, center, szemely_type, cb1, selectedId }) => {
 	const mapRef = useRef();
 	const [map, setMap] = useState(null);
+
+	const [coord, setCoord] = useState(undefined);
+	const [tempLayer, setTempLayer] = useState(undefined);
 
 	// on component mount
 	useEffect(() => {
@@ -25,9 +29,14 @@ const Map = ({ children, zoom, center, szemely_type, cb1 }) => {
 			overlays: []
 		};
 
-		let mapObject = new ol.Map(options);
-		mapObject.setTarget(mapRef.current);
-		setMap(mapObject);
+/* 		let mapObject = null;
+		if (map) {
+			mapObject = map;
+		} else { */
+		let	mapObject = new ol.Map(options);
+			mapObject.setTarget(mapRef.current);
+			setMap(mapObject);
+		/* } */
 
 
 		// Map views always need a projection.  Here we just want to map image
@@ -86,26 +95,34 @@ const Map = ({ children, zoom, center, szemely_type, cb1 }) => {
 			alert("singleclick: ");
 		 })
 
-		 mapObject.on("dblclick", function(evt){
+		mapObject.on("dblclick", function(evt){
 			console.log("double click");
 			console.log("evt:");
 			console.log(evt);
 			console.log(evt.coordinate);
-			var routeCoords = evt.coordinate;
+			
+			setCoord(evt.coordinate);
+
+			cb1(evt.coordinate);
+			
+ 			//mapObject.changed();
+			console.log(mapObject.getLayers());
+		 })
+
+/* 		if (coord) {
 			var geoMarker = new Feature({
 				type: 'geoMarker',
-				geometry: new Point(routeCoords)
+				geometry: new Point(coord)
 			  });
-
 			var sty = szemely_type ? new Style({
 				image: new Icon({
 				  anchor: [0.5, 1],
-				  src: '/qmark.png'
+				  src: '/qmark_red.png'
 				})
 			  }) : new Style({
 				image: new Icon({
 				  anchor: [0.5, 1],
-				  src: '/skull.png'
+				  src: '/skull_red.png'
 				})
 			  });
 
@@ -115,17 +132,58 @@ const Map = ({ children, zoom, center, szemely_type, cb1 }) => {
 				}),
 				style: sty
 			});
-			console.log(mapObject.getLayers());
 			mapObject.addLayer(vectorLayer);
-
-			cb1(evt.coordinate);
-			
-			mapObject.changed();
-			console.log(mapObject.getLayers());
-		 })
+		} */
 
 		return () => mapObject.setTarget(undefined);
-	}, []);
+	}, [selectedId]); // szemely_type, 
+
+	useEffect(() => {
+		if (!map) return;
+		if (coord) {
+			var geoMarker = new Feature({
+				type: 'geoMarker',
+				geometry: new Point(coord)
+			  });
+			
+			  // talalt_halott = true, eltunt_szemely = false
+			var sty = szemely_type ? new Style({
+				image: new Icon({
+				  anchor: [0.5, 1],
+				  src: '/skull_red.png'
+				})
+			  }) : new Style({
+				image: new Icon({
+				  anchor: [0.5, 1],
+				  src: '/qmark_red.png'
+				})
+			  });
+
+			var vectorLayer = new VectorLayer({
+				source: new VectorSource({
+				  features: [geoMarker]
+				}),
+				style: sty
+			});
+
+			// remove old layer
+			if(tempLayer) {
+				tempLayer.setMap(null);
+			}
+			setTempLayer(vectorLayer);
+			
+			vectorLayer.setMap(map);
+			//map.getLayers().fil
+			//map.addLayer(vectorLayer);
+			map.changed();
+		}
+	}, [coord]);
+
+	// TODO: ez nem azonnal valt...
+	useEffect(() => {
+		if (!map) return;
+		map.changed();
+	}, [selectedId]);
 
 	// zoom change handler
 	useEffect(() => {

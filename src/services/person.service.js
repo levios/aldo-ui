@@ -21,6 +21,26 @@ class PersonService {
     return http.delete(`/employees/${id}`);
   }
 
+  getImageCount(id) {
+    return http.get(`/imagecount/${id}`);
+  }
+
+  getImage(id) {
+    return http.get(`/images/${id}`);
+  }
+
+  postImage(id, data) {
+    return http.post(`/images/${id}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+  }
+
+  deleteImages(id) {
+    return http.delete(`/images/${id}`);
+  }
+
 }
 
 export default new PersonService();

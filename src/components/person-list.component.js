@@ -3,6 +3,7 @@ import PersonService from "../services/person.service";
 import { Link } from "react-router-dom";
 //import {PersonMissing, PersonFound} from "../data/person.js";
 import ReactList from 'react-list';
+import ImageBox from './image.component';
 
 export default class PersonList extends Component {
   constructor(props) {
@@ -123,6 +124,12 @@ export default class PersonList extends Component {
           <td>Ügyszám</td>
           <td>{tutorial.ugyszam}</td>
         </tr>
+        <tr>
+          <td>Fotó</td>
+          <td>
+            <ImageBox id1={tutorial.id}/>
+          </td>
+        </tr>
         </tbody>
       </table>
 {/*       <Link
@@ -166,9 +173,15 @@ export default class PersonList extends Component {
           <td>Ügyszám</td>
           <td>{tutorial.ugyszam}</td>
         </tr>
+        <tr>
+          <td>Fotó</td>
+          <td>
+            <ImageBox id1={tutorial.id}/>
+          </td>
+        </tr>
         </tbody>
       </table>
-      <Link
+{/*       <Link
               to={"/tutorials/" + tutorial.id}
               className="badge badge-warning"
             >
@@ -177,7 +190,7 @@ export default class PersonList extends Component {
       
             <button className="m-3 btn btn-sm btn-danger" onClick={() => this.removeTutorial(tutorial.id)}>
               Törlés
-            </button>
+            </button> */}
       </li>);
     }
   }
@@ -207,184 +220,7 @@ export default class PersonList extends Component {
                   type='uniform'
                 />
             </ul>
-          {/* <ul className="list-group">
-            {tutorials &&
-              tutorials.map((tutorial, index) => {
-                  if (tutorial.tipus == true) {
-                    // talalt szemely
-                    return  (<li
-                      className={
-                        "list-group-item " +
-                        (index === currentIndex ? "active" : "")
-                      }
-                      onClick={() => this.setActiveTutorial(tutorial, index)}
-                      key={index}
-                    >
-                      <table border="1">
-                      <tbody>
-                      <tr>
-                        <td>Megtalálás ideje</td>
-                        <td>{tutorial.megtalalasIdeje}</td>
-                      </tr>
-                      <tr>
-                        <td>Nem</td>
-                        <td>{tutorial.nem}</td>
-                      </tr>
-                      <tr>
-                        <td>Becsült életkor</td>
-                        <td>{tutorial.becsultEletkor}</td>
-                      </tr>
-                      <tr>
-                        <td>Halál becsült ideje</td>
-                        <td>{tutorial.halalBecsultIdeje}</td>
-                      </tr>
-                      <tr>
-                        <td>Ügyszám</td>
-                        <td>{tutorial.ugyszam}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                    <Link
-                            to={"/tutorials/" + tutorial.id}
-                            className="badge badge-warning"
-                          >
-                            Módosít
-                          </Link>
-                    
-                          <button className="m-3 btn btn-sm btn-danger" onClick={() => this.removeTutorial(tutorial.id)}>
-                            Törlés
-                          </button>
-                    </li>);
-                  } else {
-                    // eltunt szemely
-                    return  (<li
-                      className={
-                        "list-group-item " +
-                        (index === currentIndex ? "active" : "")
-                      }
-                      onClick={() => this.setActiveTutorial(tutorial, index)}
-                      key={index}
-                    >
-                      <table border="1"><tbody>
-                      <tr>
-                        <td>Eltűnés ideje</td>
-                        <td>{tutorial.eltunesIdeje}</td>
-                      </tr>
-                      <tr>
-                        <td>Nem</td>
-                        <td>{tutorial.nem}</td>
-                      </tr>
-                      <tr>
-                        <td>Életkor</td>
-                        <td>{tutorial.eletkor}</td>
-                      </tr>
-                      <tr>
-                        <td>Jelzés</td>
-                        <td>{tutorial.jelzes}</td>
-                      </tr>
-                      <tr>
-                        <td>Ügyszám</td>
-                        <td>{tutorial.ugyszam}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                    <Link
-                            to={"/tutorials/" + tutorial.id}
-                            className="badge badge-warning"
-                          >
-                            Módosít
-                          </Link>
-                    
-                          <button className="m-3 btn btn-sm btn-danger" onClick={() => this.removeTutorial(tutorial.id)}>
-                            Törlés
-                          </button>
-                    </li>);
-                  }
-                }
-              )}
-          </ul> */}
-          {}
-        </div>
-       {/*  <div className="col-md-6">
-          {currentTutorial ? (
-            currentTutorial.isMissing ? (
-            <div>
-              <h4>Eltűnt személy</h4>
-              <div>
-                <label>
-                  <strong>Eltűnés ideje</strong>
-                </label>{" "}
-                {currentTutorial.eltunesIdeje}
-              </div>
-              <div>
-                <label>
-                  <strong>Életkor:</strong>
-                </label>{" "}
-                {currentTutorial.eletkor}
-              </div>
-              <div>
-                <label>
-                  <strong>Jelzés:</strong>
-                </label>{" "}
-                {currentTutorial.jelzes}
-              </div>
-              <div>
-                <label>
-                  <strong>Nem:</strong>
-                </label>{" "}
-                {currentTutorial.nem}
-              </div>
-              <div>
-                <label>
-                  <strong>Ügyszám:</strong>
-                </label>{" "}
-                {currentTutorial.ugyszam}
-              </div>
-
-              <Link
-                to={"/tutorials/" + currentTutorial.id}
-                className="badge badge-warning"
-              >
-                Edit
-              </Link>
-            </div>
-            ) : (
-              <div>
-              <h4>Talát személy</h4>
-              <div>
-                <label>
-                  <strong>Title:</strong>
-                </label>{" "}
-                {currentTutorial.title}
-              </div>
-              <div>
-                <label>
-                  <strong>Description:</strong>
-                </label>{" "}
-                {currentTutorial.description}
-              </div>
-              <div>
-                <label>
-                  <strong>Status:</strong>
-                </label>{" "}
-                {currentTutorial.published ? "Published" : "Pending"}
-              </div>
-
-              <Link
-                to={"/tutorials/" + currentTutorial.id}
-                className="badge badge-warning"
-              >
-                Edit
-              </Link>
-            </div>
-            )
-          ) : (
-            <div>
-              <br />
-              <p>Please click on a Tutorial...</p>
-            </div>
-          )}
-        </div> */}
+          </div>
         </div>
       </div>
     );

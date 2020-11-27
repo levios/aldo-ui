@@ -25,7 +25,7 @@
     float:left;
     position: relative;
     width: 100%;
-    background:rgb(233, 220, 222);
+    background:rgb(226, 224, 224);
     clear:left;
     height: 400px;
 }
@@ -35,6 +35,6 @@
     float:left;
     position: relative;
     width: 100%;
-    background:lightblue;
+    background:rgb(226, 224, 224);
     clear:left;
 }

@@ -6,7 +6,7 @@ export default class TalaltHolttest extends Component {
     super(props);
 
     this.getPerson = this.getPerson.bind(this);
-    this.updatePublished = this.updatePublished.bind(this);
+    this.saveTalaltPerson = this.saveTalaltPerson.bind(this);
     this.updatePerson = this.updatePerson.bind(this);
     this.deleteTutorial = this.deleteTutorial.bind(this);
 
@@ -17,12 +17,23 @@ export default class TalaltHolttest extends Component {
     this.onChangeMegtalalasIdeje = this.onChangeMegtalalasIdeje.bind(this);
     this.onChangeBecsultEletkor = this.onChangeBecsultEletkor.bind(this);
     this.onChangeHalalBecsultIdeje = this.onChangeHalalBecsultIdeje.bind(this);
+    // image related
+    this.selectFile = this.selectFile.bind(this);
+    this.uploadImage = this.uploadImage.bind(this);
 
     this.state = {
       szemely: {
-        id: null,
-        coordinate: this.props.coor
+        tipus: true,
+        id: null
       },
+      //coordinate: this.props.coor,
+      nem: "",
+      halalBecsultIdeje: "",
+      megtalalasIdeje: "",
+      becsultEletkor: "",
+      ugyszam: "",
+      imageName: null,
+      selectedFile: null,
       message: ""
     };
   }
@@ -37,7 +48,7 @@ export default class TalaltHolttest extends Component {
 
   componentDidUpdate(prevProps) {
     // Typical usage (don't forget to compare props):
-    if (this.props.id1 !== prevProps.id1) {
+    if (this.props.id1 && this.props.id1 !== prevProps.id1) {
       let id = this.props.id1;
       console.log(`updated 'Talalt' component: ${id}`);
       if (id) {
@@ -68,18 +79,24 @@ export default class TalaltHolttest extends Component {
       };
     });
   }
-  onChangeX(e) {
-    var szemely = this.state.szemely;
-    szemely.x = e.target.value;
-    this.setState({
-      szemely: szemely
+  onChangeX(x) {
+    this.setState(function(prevState) {
+      return {
+        szemely: {
+          ...prevState.szemely,
+          x: x
+        }
+      };
     });
   }
-  onChangeY(e) {
-    var szemely = this.state.szemely;
-    szemely.y = e.target.value;
-    this.setState({
-      szemely: szemely
+  onChangeY(y) {
+    this.setState(function(prevState) {
+      return {
+        szemely: {
+          ...prevState.szemely,
+          y: y
+        }
+      };
     });
   }
   onChangeMegtalalasIdeje(e) {
@@ -128,23 +145,30 @@ export default class TalaltHolttest extends Component {
         console.log(e);
       });
   }
+  
+  saveTalaltPerson() {
+    console.log(`Saving TalaltPerson`);
+    if (!this.props.coor) {
+      alert("Probléma történt mentés közben: üres koordináta");
+      return;
+    }
 
-  updatePublished(status) {
     var data = {
-      id: this.state.szemely.id,
-      title: this.state.szemely.title,
-      description: this.state.szemely.description,
-      published: status
+      x: this.props.coor[0],
+      y: this.props.coor[1],
+      tipus: this.state.szemely.tipus,
+      ugyszam: this.state.szemely.ugyszam,
+      nem: this.state.szemely.nem,
+      becsultEletkor: this.state.szemely.becsultEletkor,
+      halalBecsultIdeje: this.state.szemely.halalBecsultIdeje,
+      megtalalasIdeje: this.state.szemely.megtalalasIdeje
     };
 
-    PersonService.update(this.state.szemely.id, data)
+    PersonService.create(data)
       .then(response => {
-        this.setState(prevState => ({
-          szemely: {
-            ...prevState.szemely,
-            published: status
-          }
-        }));
+        this.setState({
+          message: "Sikeres mentés!"
+        });
         console.log(response.data);
       })
       .catch(e => {
@@ -160,7 +184,7 @@ export default class TalaltHolttest extends Component {
       .then(response => {
         console.log(response.data);
         this.setState({
-          message: "Sikeres mentés!"
+          message: "Sikeres módosítás!"
         });
       })
       .catch(e => {
@@ -180,13 +204,30 @@ export default class TalaltHolttest extends Component {
       });
   }
 
+  selectFile(event) {
+    console.log(event.target.files[0]);
+    this.setState({
+      selectedFile: event.target.files[0]
+    });
+  }
+
+  uploadImage(id) {    
+    var data = new FormData()
+    data.append('imageFile', this.state.selectedFile)
+    PersonService.postImage(id, data)
+      .then(res => { // then print response status
+        console.log(res.statusText)
+      });
+  }
+
   render() {
     const { szemely } = this.state;
 
     return (
       <div>
+        { this.state.message ? (<p>{this.state.message}</p>) : (
           <div className="edit-form">
-          { this.props.id1 ? ( <h4>Szerkesztés</h4> ) : ( <h4>Hozzáadás</h4> ) }
+          { this.props.id1 ? ( <h4>Szerkesztés</h4> ) : ( <h4>Hozzáadás - talált holttest</h4> ) }
             <form>
               <div className="form-group row">
                 <label htmlFor="nem" class="col-sm-4 col-form-label">Nem</label>
@@ -233,27 +274,36 @@ export default class TalaltHolttest extends Component {
                   value={szemely.halalBecsultIdeje}
                   onChange={this.onChangeHalalBecsultIdeje}  />
               </div>
+              <div className="row"> 
+                <div class="col-sm-4 col-form-label">Fotó</div>
+                { (this.state.imageName) ? (
+                  <div>{this.state.imageName}</div>
+                ) : (
+                  <input type="file" name="file" onChange={this.selectFile} />
+                )}
+              </div>
             </form>
 
-        {this.props.id1 ? (
-            <div>
-              <button
-                className="badge badge-danger mr-2"
-                onClick={this.deleteTutorial}>Töröl</button>
-              <button
-                type="submit"
-                className="badge badge-success"
-                onClick={this.updatePerson}>Módosít</button>
-            </div>
-        ) : (
-          <div>
-            <button
-              className="badge badge-primary mr-2"
-              onClick={() => this.updatePublished(true)}>Ment</button>
+            {this.props.id1 ? (
+                <div>
+                  <button
+                    className="badge badge-danger mr-2"
+                    onClick={this.deleteTutorial}>Töröl</button>
+                  <button
+                    type="submit"
+                    className="badge badge-success"
+                    onClick={this.updatePerson}>Módosít</button>
+                </div>
+            ) : (
+              <div>
+                <button
+                  className="badge badge-primary mr-2"
+                  onClick={this.saveTalaltPerson}>Ment</button>
+              </div>
+            )}
+        
           </div>
         )}
-        <p>{this.state.message}</p>
-        </div>
       </div>
     );
   }

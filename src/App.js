@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
 import Map from "./Map";
 import { Layers, TileLayer, VectorLayer } from "./Layers";
-import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
+import { Circle as CircleStyle, Fill, Stroke, Style, Icon } from 'ol/style';
+import VectorSource from 'ol/source/Vector.js'
 import { osm, vector } from "./Source";
 import { fromLonLat, get } from 'ol/proj';
 import GeoJSON from 'ol/format/GeoJSON';
@@ -22,6 +23,9 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
+import Feature from 'ol/Feature.js';
+import Point from 'ol/geom/Point.js';
+import PersonService from "./services/person.service";
 
 let styles = {
 	'Point': new Style({
@@ -176,10 +180,12 @@ const geojsonObject2 = {
 };
 
 const App = () => {
-	const [center, setCenter] = useState([18.23333, 46.08333]); // -94.9065, 38.9884]);
+	const [center, setCenter] = useState([18.23333, 46.08333]); // location: Pecs
 	const [zoom, setZoom] = useState(10);
-	const [showLayer1, setShowLayer1] = useState(true);
-	const [showLayer2, setShowLayer2] = useState(true);
+/* 	const [showLayer1, setShowLayer1] = useState(true);
+	const [showLayer2, setShowLayer2] = useState(true); */
+
+	const [persons, setPersons] = useState([]);
 
 	const [selectedId, setSelectedId] = useState(-1);
 
@@ -211,6 +217,18 @@ const App = () => {
 /* 	const selectedIdCB = () => {
 		return selectedId;
 	} */
+
+
+	useEffect(() => {
+		PersonService.getAll()
+		.then(response => {
+			setPersons(response.data);
+		  	console.log(response.data);
+		})
+		.catch(e => {
+		  console.log(e);
+		});
+	}, []);
 
 	return (
 		<div>
@@ -277,13 +295,13 @@ const App = () => {
 								/>
 							</RadioGroup>
 						</FormControl>
-						<Map center={fromLonLat(center)} zoom={zoom} szemely_type={szemelyTipus} cb1={(id) => mapCB(id)}>
+						<Map center={fromLonLat(center)} zoom={zoom} szemely_type={szemelyTipus} cb1={(id) => mapCB(id)} selectedId={selectedId} >
 							<Layers>
 								<TileLayer
 									source={osm()}
 									zIndex={0}
 								/>
-								{showLayer1 && (
+{/* 								{showLayer1 && (
 									<VectorLayer
 										source={vector({ features: new GeoJSON().readFeatures(geojsonObject, { featureProjection: get('EPSG:3857') }) })}
 										style={styles.MultiPolygon}
@@ -297,7 +315,48 @@ const App = () => {
 										source={vector({ features: new GeoJSON().readFeatures(geojsonObject2, { featureProjection: get('EPSG:3857') }) })}
 										style={styles.MultiPolygon}
 									/>
-								)}
+								)} */}
+
+								{persons && persons.map((p, idx) => {
+									// var routeCoords = evt.coordinate;
+									var routeCoords = [p.x, p.y];
+									
+									var geoMarker = new Feature({
+										type: 'geoMarker',
+										geometry: new Point(routeCoords)
+									});
+
+									const skull = '/skull.png';
+									const skull_blue = '/skull_blue.png';
+									const qmark = '/qmark.png';
+									const qmark_blue = '/qmark_blue.png';
+
+									// talalt_szemeny = true, eltunt_szemely = false
+									var sty = p.tipus ? new Style({
+										image: new Icon({
+										  anchor: [0.5, 1],
+										  src: (p.id == selectedId) ? skull_blue : skull
+										})
+									}) : new Style({
+										image: new Icon({
+										  anchor: [0.5, 1],
+										  src: (p.id == selectedId) ? qmark_blue : qmark
+										})
+									});
+
+									return  (
+										<VectorLayer
+											source={new VectorSource({
+											  features: [geoMarker]
+											})}
+
+											style={sty}
+
+											key={idx}
+										 />
+									)
+								})
+								}
 							</Layers>
 							<Controls>
 								<FullScreenControl />

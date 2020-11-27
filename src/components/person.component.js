@@ -10,9 +10,7 @@ export default class Szemely extends Component {
     this.getPerson = this.getPerson.bind(this);
 
     this.state = {
-      szemely: {
-        id: null
-      },
+      szemely: {},
       message: ""
     };
   }
