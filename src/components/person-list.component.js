@@ -8,57 +8,57 @@ import ImageBox from './image.component';
 export default class PersonList extends Component {
   constructor(props) {
     super(props);
-    this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
-    this.retrieveTutorials = this.retrieveTutorials.bind(this);
-    this.refreshList = this.refreshList.bind(this);
+    //this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
+    //this.retrieveTutorials = this.retrieveTutorials.bind(this);
+    //this.refreshList = this.refreshList.bind(this);
     this.setActiveTutorial = this.setActiveTutorial.bind(this);
-    this.removeTutorial = this.removeTutorial.bind(this);
-    this.searchTitle = this.searchTitle.bind(this);
+    //this.removeTutorial = this.removeTutorial.bind(this);
+    //this.searchTitle = this.searchTitle.bind(this);
     this.renderItem = this.renderItem.bind(this);
     //this.cb = this.props.cb.bind(this);
 
     this.state = {
-      tutorials: [],
+      //persons: props.persons,
       currentTutorial: null,
       currentIndex: -1,
       searchTitle: ""
     };
   }
 
-  componentDidMount() {
+/*   componentDidMount() {
     this.retrieveTutorials();
-  }
+  } */
 
 
-  onChangeSearchTitle(e) {
+/*   onChangeSearchTitle(e) {
     const searchTitle = e.target.value;
 
     this.setState({
       searchTitle: searchTitle
     });
-  }
+  } */
 
-  retrieveTutorials() {
+/*   retrieveTutorials() {
     PersonService.getAll()
       .then(response => {
         this.setState({
-          tutorials: response.data
+          persons: response.data
         });
         console.log(response.data);
       })
       .catch(e => {
         console.log(e);
       });
-  }
+  } */
 
-  refreshList() {
+/*   refreshList() {
     this.retrieveTutorials();
     this.setState({
       currentTutorial: null,
       currentIndex: -1
     });
   }
-
+ */
   setActiveTutorial(tutorial, index) {
     this.setState({
       currentTutorial: tutorial,
@@ -67,32 +67,22 @@ export default class PersonList extends Component {
     this.props.cb1(tutorial.id);
   }
 
-  removeTutorial(id) {
-    PersonService.delete(id)
-      .then(response => {
-        console.log(response.data);
-        this.refreshList();
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
+/* 
   searchTitle() {
     PersonService.findByTitle(this.state.searchTitle)
       .then(response => {
         this.setState({
-          tutorials: response.data
+          persons: response.data
         });
         console.log(response.data);
       })
       .catch(e => {
         console.log(e);
       });
-  }
+  } */
 
   renderItem(index, key) {
-    var tutorial = this.state.tutorials[index];
+    var tutorial = this.props.persons[index];
     if (tutorial.tipus) {
       return  (<li
         className={
@@ -132,16 +122,6 @@ export default class PersonList extends Component {
         </tr>
         </tbody>
       </table>
-{/*       <Link
-              to={"/tutorials/" + tutorial.id}
-              className="badge badge-warning"
-            >
-              Módosít
-            </Link>
-      
-            <button className="m-3 btn btn-sm btn-danger" onClick={() => this.removeTutorial(tutorial.id)}>
-              Törlés
-            </button> */}
       </li>);
     } else {
       return  (<li
@@ -181,42 +161,32 @@ export default class PersonList extends Component {
         </tr>
         </tbody>
       </table>
-{/*       <Link
-              to={"/tutorials/" + tutorial.id}
-              className="badge badge-warning"
-            >
-              Módosít
-            </Link>
-      
-            <button className="m-3 btn btn-sm btn-danger" onClick={() => this.removeTutorial(tutorial.id)}>
-              Törlés
-            </button> */}
       </li>);
     }
   }
 
   render() {
-    const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
+    const { searchTitle, persons, currentTutorial, currentIndex } = this.state;
 
     return (
       <div>
         <div>
             <h4 style={{marginLeft: '30px', float: "left"}}>Lista</h4>
-            <button
+{/*             <button
               style={{marginLeft: '30px'}}
               className="btn btn-outline-secondary"
               type="button"
               onClick={this.refreshList}
             >
               Frissít
-            </button>
+            </button> */}
         </div>
         <div className="list" >
           <div>
             <ul className="list-group" style={{overflow: 'auto', height: '400px'}}>
               <ReactList
                   itemRenderer={this.renderItem}
-                  length={this.state.tutorials.length}
+                  length={this.props.persons.length}
                   type='uniform'
                 />
             </ul>

@@ -181,6 +181,9 @@ export default class EltuntSzemely extends Component {
 
     PersonService.create(data)
       .then(response => {
+        // notify parent to reload list
+        this.props.listUpdated();
+
         this.setState({
           message: "Sikeres mentés!"
         });

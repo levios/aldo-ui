@@ -12,8 +12,6 @@ export default class TalaltHolttest extends Component {
 
     this.onChangeNem = this.onChangeNem.bind(this);
     this.onChangeUgyszam = this.onChangeUgyszam.bind(this);
-    this.onChangeX = this.onChangeX.bind(this);
-    this.onChangeY = this.onChangeY.bind(this);
     this.onChangeMegtalalasIdeje = this.onChangeMegtalalasIdeje.bind(this);
     this.onChangeBecsultEletkor = this.onChangeBecsultEletkor.bind(this);
     this.onChangeHalalBecsultIdeje = this.onChangeHalalBecsultIdeje.bind(this);
@@ -24,14 +22,14 @@ export default class TalaltHolttest extends Component {
     this.state = {
       szemely: {
         tipus: true,
-        id: null
+        id: null,
+        nem: "",
+        halalBecsultIdeje: "",
+        megtalalasIdeje: "",
+        becsultEletkor: "",
+        ugyszam: "",
       },
       //coordinate: this.props.coor,
-      nem: "",
-      halalBecsultIdeje: "",
-      megtalalasIdeje: "",
-      becsultEletkor: "",
-      ugyszam: "",
       imageName: null,
       selectedFile: null,
       message: ""
@@ -75,26 +73,6 @@ export default class TalaltHolttest extends Component {
         szemely: {
           ...prevState.szemely,
           ugyszam: ugyszam
-        }
-      };
-    });
-  }
-  onChangeX(x) {
-    this.setState(function(prevState) {
-      return {
-        szemely: {
-          ...prevState.szemely,
-          x: x
-        }
-      };
-    });
-  }
-  onChangeY(y) {
-    this.setState(function(prevState) {
-      return {
-        szemely: {
-          ...prevState.szemely,
-          y: y
         }
       };
     });
@@ -166,6 +144,9 @@ export default class TalaltHolttest extends Component {
 
     PersonService.create(data)
       .then(response => {
+        // notify parent to reload list
+        this.props.listUpdated();
+
         this.setState({
           message: "Sikeres mentés!"
         });

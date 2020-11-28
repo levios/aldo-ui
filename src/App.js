@@ -219,6 +219,17 @@ const App = () => {
 	} */
 
 
+	const listUpdated = () => {
+		PersonService.getAll()
+		.then(response => {
+			setPersons(response.data);
+		  	console.log(response.data);
+		})
+		.catch(e => {
+		  console.log(e);
+		});
+	}
+
 	useEffect(() => {
 		PersonService.getAll()
 		.then(response => {
@@ -249,7 +260,7 @@ const App = () => {
 				<Row>
 					<Col xs={3}>
 						<div className="div1">
-							<PersonList cb1={(id) => cb(id)}/>
+							<PersonList cb1={(id) => cb(id)} persons={persons} />
 							{/*<BrowserRouter>
 								<Switch>
 									<Route exact path={["/", "/persons"]} component={PersonList} />
@@ -269,7 +280,7 @@ const App = () => {
 								(selectedId != -1) ? (
 									<Szemely id1={selectedId} />
 								) : (
-									(szemelyTipus) ? (<TalaltHolttest coor={coord}  />) : (<EltuntSzemely coor={coord}  />)
+									(szemelyTipus) ? (<TalaltHolttest coor={coord} listUpdated={listUpdated} />) : (<EltuntSzemely coor={coord} listUpdated={listUpdated} />)
 								)
 							)
 							}	
