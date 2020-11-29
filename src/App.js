@@ -256,7 +256,7 @@ const App = () => {
 			</div>
 			</nav>
 
-			<div className=".container-fluid mt-3 ml-2 mr-2">
+			<div className=".container-fluid mt-2 ml-2 mr-2">
 				<Row>
 					<Col xs={3}>
 						<div className="div1">
@@ -275,12 +275,16 @@ const App = () => {
 						</div>
 						<div className="div2">
 							{ (selectedId == -1 && !coord) ? (
-								<div>Hozzon létre új elemet, vagy válasszon ki egyet a listából ...</div>
+								<div>Hozzon létre új elemet, vagy válasszon meglévőt a listából.<br />Új elem létrehozásához kattintson duplán a térképen a hely kiválasztásához.</div>
 							) : (
 								(selectedId != -1) ? (
-									<Szemely id1={selectedId} />
+									<Szemely id1={selectedId} listUpdated={() => listUpdated()}/>
 								) : (
-									(szemelyTipus) ? (<TalaltHolttest coor={coord} listUpdated={listUpdated} />) : (<EltuntSzemely coor={coord} listUpdated={listUpdated} />)
+									(szemelyTipus) ? (
+										<TalaltHolttest coor={coord}  listUpdated={() => listUpdated()} />
+									) : (
+										<EltuntSzemely coor={coord} listUpdated={() => listUpdated()} />
+									)
 								)
 							)
 							}	
@@ -288,9 +292,10 @@ const App = () => {
 
 					</Col>
 					<Col xs={9}>
+						<div className="my-label MuiTypography-body1">Körözés típusa:</div>
 						<FormControl component="fieldset">
-							<FormLabel component="legend">Körözés típusa</FormLabel>
-							<RadioGroup row aria-label="position" name="position" defaultValue="talalt_szemely" onChange={(c) => radioChanged(c)}
+{/* 							<FormLabel component="legend">Körözés típusa</FormLabel>
+ */}							<RadioGroup row aria-label="position" name="position" defaultValue="talalt_szemely" onChange={(c) => radioChanged(c)}
 							>
 								<FormControlLabel
 								value="talalt_szemely"

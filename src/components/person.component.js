@@ -52,9 +52,9 @@ export default class Szemely extends Component {
     return (
         // talalt holtest = true, eltunt szemely = false
         (szemely.tipus) ? (
-            <TalaltHolttest id1={this.props.id1} />
+            <TalaltHolttest id1={this.props.id1} listUpdated={() => this.props.listUpdated()} />
         ) : (
-            <EltuntSzemely id1={this.props.id1}  />
+            <EltuntSzemely id1={this.props.id1}  listUpdated={() => this.props.listUpdated()} />
         )
     );
   }

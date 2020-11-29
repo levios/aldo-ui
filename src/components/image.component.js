@@ -1,8 +1,8 @@
 import React  from 'react';
 /* import React, { Image }  from 'react';
- */import ImageViewer from 'react-simple-image-viewer';
+import ImageViewer from 'react-simple-image-viewer'; */
 import PersonService from "../services/person.service";
-import Lightbox from 'react-lightbox-component';
+//import Lightbox from 'react-lightbox-component';
 import "react-lightbox-component/build/css/index.css";
 import Viewer from 'react-viewer';
 /**

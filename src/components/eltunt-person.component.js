@@ -199,11 +199,11 @@ export default class EltuntSzemely extends Component {
   }
 
   updatePerson() {
-    PersonService.update(
-      this.state.szemely.id,
-      this.state.szemely
-    )
+    PersonService.update(this.state.szemely.id, this.state.szemely)
       .then(response => {
+        // notify parent to reload list
+        this.props.listUpdated();
+        console.log("updatePerson");
         console.log(response.data);
         this.setState({
           message: "Sikeres mentés!"
@@ -221,9 +221,14 @@ export default class EltuntSzemely extends Component {
   deleteTutorial() {    
     PersonService.delete(this.state.szemely.id)
       .then(response => {
+        console.log("deleteTutorial");
         console.log(response.data);
-        // TODO refresh List callback
-        //this.props.history.push('/tutorials')
+        // notify parent to reload list
+        this.props.listUpdated();
+
+        this.setState({
+          message: "Sikeres törlés!"
+        });
       })
       .catch(e => {
         console.log(e);
@@ -244,7 +249,7 @@ export default class EltuntSzemely extends Component {
       .then(res => { // then print response status
         console.log(res.statusText)
         this.setState({
-          message: "Sikeres mentés!",
+          message: "Sikeres fotó feltöltés!",
           selectedFile: null
         });
       });

@@ -4,6 +4,10 @@ import { Link } from "react-router-dom";
 //import {PersonMissing, PersonFound} from "../data/person.js";
 import ReactList from 'react-list';
 import ImageBox from './image.component';
+import ReactExpandableListView from 'react-expandable-listview';
+import './listview.css';
+import EltuntListElem from './eltunt-list-elem.component';
+import TalaltListElem from './talalt-list-elem.component';
 
 export default class PersonList extends Component {
   constructor(props) {
@@ -16,6 +20,7 @@ export default class PersonList extends Component {
     //this.searchTitle = this.searchTitle.bind(this);
     this.renderItem = this.renderItem.bind(this);
     //this.cb = this.props.cb.bind(this);
+    //this.menuItems = this.menuItems.bind(this);
 
     this.state = {
       //persons: props.persons,
@@ -84,7 +89,9 @@ export default class PersonList extends Component {
   renderItem(index, key) {
     var tutorial = this.props.persons[index];
     if (tutorial.tipus) {
-      return  (<li
+      return (
+        <TalaltListElem person={tutorial} />
+/*       <li
         className={
           "list-group-item " +
           (index === this.state.currentIndex ? "active" : "")
@@ -92,8 +99,7 @@ export default class PersonList extends Component {
         onClick={() => this.setActiveTutorial(tutorial, index)}
         key={index}
       >
-        <table border="1">
-        <tbody>
+        <table border="1"><tbody>
         <tr>
           <td>Megtalálás ideje</td>
           <td>{tutorial.megtalalasIdeje}</td>
@@ -122,9 +128,13 @@ export default class PersonList extends Component {
         </tr>
         </tbody>
       </table>
-      </li>);
+      </li> */
+      );
     } else {
-      return  (<li
+      return  (
+      <EltuntListElem person={tutorial} />
+
+/*       <li
         className={
           "list-group-item " +
           (index === this.state.currentIndex ? "active" : "")
@@ -132,38 +142,42 @@ export default class PersonList extends Component {
         onClick={() => this.setActiveTutorial(tutorial, index)}
         key={index}
       >
-        <table border="1"><tbody>
-        <tr>
-          <td>Eltűnés ideje</td>
-          <td>{tutorial.eltunesIdeje}</td>
-        </tr>
-        <tr>
-          <td>Nem</td>
-          <td>{tutorial.nem}</td>
-        </tr>
-        <tr>
-          <td>Életkor</td>
-          <td>{tutorial.eletkor}</td>
-        </tr>
-        <tr>
-          <td>Jelzés</td>
-          <td>{tutorial.jelzes}</td>
-        </tr>
-        <tr>
-          <td>Ügyszám</td>
-          <td>{tutorial.ugyszam}</td>
-        </tr>
-        <tr>
-          <td>Fotó</td>
-          <td>
-            <ImageBox id1={tutorial.id}/>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      </li>);
+        <button type="button" class="collapsible">Open Collapsible</button>
+        <div class="content" >
+          <table border="1"><tbody>
+          <tr>
+            <td>Eltűnés ideje</td>
+            <td>{tutorial.eltunesIdeje}</td>
+          </tr>
+          <tr>
+            <td>Nem</td>
+            <td>{tutorial.nem}</td>
+          </tr>
+          <tr>
+            <td>Életkor</td>
+            <td>{tutorial.eletkor}</td>
+          </tr>
+          <tr>
+            <td>Jelzés</td>
+            <td>{tutorial.jelzes}</td>
+          </tr>
+          <tr>
+            <td>Ügyszám</td>
+            <td>{tutorial.ugyszam}</td>
+          </tr>
+          <tr>
+            <td>Fotó</td>
+            <td>
+              <ImageBox id1={tutorial.id}/>
+            </td>
+          </tr>
+          </tbody></table>
+      </div>  
+      </li> */
+      );
     }
   }
+
 
   render() {
     const { searchTitle, persons, currentTutorial, currentIndex } = this.state;
@@ -171,8 +185,8 @@ export default class PersonList extends Component {
     return (
       <div>
         <div>
-            <h4 style={{marginLeft: '30px', float: "left"}}>Lista</h4>
-{/*             <button
+{/*             <p style={{marginLeft: '30px', float: "left"}}>Kattintson duplán a </p>
+             <button
               style={{marginLeft: '30px'}}
               className="btn btn-outline-secondary"
               type="button"
@@ -181,18 +195,39 @@ export default class PersonList extends Component {
               Frissít
             </button> */}
         </div>
-        <div className="list" >
+        <div className="list" style={{overflow: 'auto', height: '400px'}} >
           <div>
-            <ul className="list-group" style={{overflow: 'auto', height: '400px'}}>
-              <ReactList
-                  itemRenderer={this.renderItem}
-                  length={this.props.persons.length}
-                  type='uniform'
-                />
-            </ul>
+{/*             <ul className="list-group" style={{overflow: 'auto', height: '400px'}}>
+ */}              
+ 
+            {this.props.persons.map((tutorial, index)=> {
+              if (tutorial.tipus) {
+                return (
+                  <TalaltListElem 
+                    key={index} 
+                    keyIndex={index} // I only need this because cannot call this.props.key from Component
+                    person={tutorial} 
+                    cb={(tut,idx) => this.setActiveTutorial(tut,idx)} 
+                    activeIndex={this.state.currentIndex} />
+                )
+              } else {
+                return (
+                  <EltuntListElem 
+                    key={index} 
+                    keyIndex={index} // I only need this because cannot call this.props.key from Component
+                    person={tutorial} 
+                    cb={(tut,idx) => this.setActiveTutorial(tut,idx)} 
+                    activeIndex={this.state.currentIndex} />
+                )
+              }
+
+              }
+            )}
           </div>
         </div>
       </div>
     );
   }
+
+  
 }

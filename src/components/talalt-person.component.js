@@ -146,7 +146,6 @@ export default class TalaltHolttest extends Component {
       .then(response => {
         // notify parent to reload list
         this.props.listUpdated();
-
         this.setState({
           message: "Sikeres mentés!"
         });
@@ -163,6 +162,8 @@ export default class TalaltHolttest extends Component {
       this.state.szemely
     )
       .then(response => {
+        // notify parent to reload list
+        this.props.listUpdated();
         console.log(response.data);
         this.setState({
           message: "Sikeres módosítás!"
@@ -177,8 +178,8 @@ export default class TalaltHolttest extends Component {
     PersonService.delete(this.state.szemely.id)
       .then(response => {
         console.log(response.data);
-        // TODO refresh List callback
-        //this.props.history.push('/tutorials')
+        // notify parent to reload list
+        this.props.listUpdated();
       })
       .catch(e => {
         console.log(e);
@@ -211,7 +212,7 @@ export default class TalaltHolttest extends Component {
           { this.props.id1 ? ( <h4>Szerkesztés</h4> ) : ( <h4>Hozzáadás - talált holttest</h4> ) }
             <form>
               <div className="form-group row">
-                <label htmlFor="nem" class="col-sm-4 col-form-label">Nem</label>
+                <label htmlFor="nem" className="col-sm-4 col-form-label">Nem</label>
                 <input
                   type="text"
                   className="form-control col-sm-7"
@@ -220,7 +221,7 @@ export default class TalaltHolttest extends Component {
                   onChange={this.onChangeNem}  />
               </div>
               <div className="form-group row">
-                <label htmlFor="ugyszam" class="col-sm-4 col-form-label">Ügyszám</label>
+                <label htmlFor="ugyszam" className="col-sm-4 col-form-label">Ügyszám</label>
                 <input
                   type="text"
                   className="form-control col-sm-7"
@@ -229,7 +230,7 @@ export default class TalaltHolttest extends Component {
                   onChange={this.onChangeUgyszam} />
               </div>
               <div className="form-group row">
-                <label htmlFor="megtalalasIdeje" class="col-sm-4 col-form-label">Megtalálás ideje</label>
+                <label htmlFor="megtalalasIdeje" className="col-sm-4 col-form-label">Megtalálás ideje</label>
                 <input
                   type="text"
                   className="form-control col-sm-7"
@@ -238,7 +239,7 @@ export default class TalaltHolttest extends Component {
                   onChange={this.onChangeMegtalalasIdeje}  />
               </div>
               <div className="form-group row">
-                <label htmlFor="becsultEletkor" class="col-sm-4 col-form-label">Becsült életkor</label>
+                <label htmlFor="becsultEletkor" className="col-sm-4 col-form-label">Becsült életkor</label>
                 <input
                   type="text"
                   className="form-control col-sm-7"
@@ -247,7 +248,7 @@ export default class TalaltHolttest extends Component {
                   onChange={this.onChangeBecsultEletkor}  />
               </div>
               <div className="form-group row">
-                <label htmlFor="halalBecsultIdeje" class="col-sm-4 col-form-label">Halál becsült ideje</label>
+                <label htmlFor="halalBecsultIdeje" className="col-sm-4 col-form-label">Halál becsült ideje</label>
                 <input
                   type="text"
                   className="form-control col-sm-7"
@@ -256,7 +257,7 @@ export default class TalaltHolttest extends Component {
                   onChange={this.onChangeHalalBecsultIdeje}  />
               </div>
               <div className="row"> 
-                <div class="col-sm-4 col-form-label">Fotó</div>
+                <div className="col-sm-4 col-form-label">Fotó</div>
                 { (this.state.imageName) ? (
                   <div>{this.state.imageName}</div>
                 ) : (
