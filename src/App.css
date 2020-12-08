@@ -20,6 +20,7 @@
     background:rgb(226, 224, 224);
     clear:left;
     height: 400px;
+    border: 1px solid gray;
 }
   
 .div2 {
@@ -34,4 +35,12 @@
 .my-label {
   float:left;
   padding-top:9px;
+}
+
+.col-3 {
+    padding-right: 0px;
+}
+
+.form-group {
+    margin-bottom: .5rem;
 }

@@ -52,6 +52,20 @@ export default class TalaltHolttest extends Component {
       if (id) {
         this.getPerson(id);
       }
+    } else if (this.props.coor && this.props.coor !== prevProps.coor) {
+      console.log(`updated 'Talalt' component with coordinate: ${this.props.coor}`);
+      this.setState({
+        szemely: {
+          tipus: true,
+          id: null,
+          nem: "",
+          halalBecsultIdeje: "",
+          megtalalasIdeje: "",
+          becsultEletkor: "",
+          ugyszam: "",
+        },
+        message: ""  
+      });
     }
   }
 
@@ -115,7 +129,8 @@ export default class TalaltHolttest extends Component {
     PersonService.get(id)
       .then(response => {
         this.setState({
-          szemely: response.data
+          szemely: response.data,
+          message: ""
         });
         console.log(response.data);
       })
@@ -154,6 +169,10 @@ export default class TalaltHolttest extends Component {
       .catch(e => {
         console.log(e);
       });
+
+    if (this.state.selectedFile) {
+      this.uploadImage(this.state.szemely.id);
+    }
   }
 
   updatePerson() {
@@ -172,6 +191,10 @@ export default class TalaltHolttest extends Component {
       .catch(e => {
         console.log(e);
       });
+
+    if (this.state.selectedFile) {
+      this.uploadImage(this.state.szemely.id);
+    }
   }
 
   deleteTutorial() {    
@@ -199,6 +222,10 @@ export default class TalaltHolttest extends Component {
     PersonService.postImage(id, data)
       .then(res => { // then print response status
         console.log(res.statusText)
+        this.setState({
+          message: "Sikeres fotó feltöltés!",
+          selectedFile: null
+        });
       });
   }
 

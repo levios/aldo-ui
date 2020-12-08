@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
 import Map from "./Map";
 import { Layers, TileLayer, VectorLayer } from "./Layers";
+import ListLayer from "./Layers/ListLayer.js";
 import { Circle as CircleStyle, Fill, Stroke, Style, Icon } from 'ol/style';
 import VectorSource from 'ol/source/Vector.js'
 import { osm, vector } from "./Source";
@@ -245,7 +246,7 @@ const App = () => {
 		<div>
 			<nav className="navbar navbar-expand navbar-dark bg-dark">
 			<a href="/" className="navbar-brand">
-			Terkep <i>(Beta verzió)</i>
+			ALDO
 			</a>
 			<div className="navbar-nav mr-auto">
 {/* 				<li className="nav-item">
@@ -256,8 +257,8 @@ const App = () => {
 			</div>
 			</nav>
 
-			<div className=".container-fluid mt-2 ml-2 mr-2">
-				<Row>
+			<div className="container-fluid mt-2 mr-2 h-100">
+				<Row className="h-100">
 					<Col xs={3}>
 						<div className="div1">
 							<PersonList cb1={(id) => cb(id)} persons={persons} />
@@ -275,7 +276,7 @@ const App = () => {
 						</div>
 						<div className="div2">
 							{ (selectedId == -1 && !coord) ? (
-								<div>Hozzon létre új elemet, vagy válasszon meglévőt a listából.<br />Új elem létrehozásához kattintson duplán a térképen a hely kiválasztásához.</div>
+								<div>Hozzon létre új elemet, vagy válasszon meglévőt a listából.<br />Új elem létrehozásához kattintson a térképen a hely kiválasztásához.</div>
 							) : (
 								(selectedId != -1) ? (
 									<Szemely id1={selectedId} listUpdated={() => listUpdated()}/>
@@ -311,29 +312,22 @@ const App = () => {
 								/>
 							</RadioGroup>
 						</FormControl>
-						<Map center={fromLonLat(center)} zoom={zoom} szemely_type={szemelyTipus} cb1={(id) => mapCB(id)} selectedId={selectedId} >
-							<Layers>
+						<Map 
+							center={fromLonLat(center)} 
+							zoom={zoom} 
+							szemely_type={szemelyTipus} 
+							cb1={(id) => mapCB(id)} 
+							selectedId={selectedId} 
+							persons={persons}
+						>
+{/* 							<Layers>
 								<TileLayer
 									source={osm()}
 									zIndex={0}
 								/>
-{/* 								{showLayer1 && (
-									<VectorLayer
-										source={vector({ features: new GeoJSON().readFeatures(geojsonObject, { featureProjection: get('EPSG:3857') }) })}
-										style={styles.MultiPolygon}
-										//style={styles.image}
 
-									/> 
-									
-								)}
-								{showLayer2 && (
-									<VectorLayer
-										source={vector({ features: new GeoJSON().readFeatures(geojsonObject2, { featureProjection: get('EPSG:3857') }) })}
-										style={styles.MultiPolygon}
-									/>
-								)} */}
-
-								{persons && persons.map((p, idx) => {
+								<ListLayer persons={persons} selectedId={selectedId} /> */}
+								{/* {persons && persons.map((p, idx) => {
 									// var routeCoords = evt.coordinate;
 									var routeCoords = [p.x, p.y];
 									
@@ -372,32 +366,14 @@ const App = () => {
 										 />
 									)
 								})
-								}
-							</Layers>
+								} */}
+{/* 							</Layers>
 							<Controls>
 								<FullScreenControl />
-							</Controls>
+							</Controls> */}
 						</Map>
 					</Col>
 				</Row>
-{/* 				<Row>
-					<Col>	
-						<div>
-							<input
-									type="checkbox"
-									checked={showLayer1}
-									onChange={event => setShowLayer1(event.target.checked)}
-								/>Johnson County
-						</div>
-						<div>
-							<input
-									type="checkbox"
-									checked={showLayer2}
-									onChange={event => setShowLayer2(event.target.checked)}
-								/>Wyandotte County
-						</div>
-					</Col>
-				</Row> */}
 			</div>
 		</div>
 	);

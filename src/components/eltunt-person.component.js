@@ -16,8 +16,6 @@ export default class EltuntSzemely extends Component {
     this.onChangeEletkor = this.onChangeEletkor.bind(this);
     this.onChangeJelzes = this.onChangeJelzes.bind(this);
     this.onChangeUgyszam = this.onChangeUgyszam.bind(this);
-    this.onChangeX = this.onChangeX.bind(this);
-    this.onChangeY = this.onChangeY.bind(this);
     // image related
     this.selectFile = this.selectFile.bind(this);
     this.uploadImage = this.uploadImage.bind(this);
@@ -44,6 +42,9 @@ export default class EltuntSzemely extends Component {
     if (this.props.id1) {
       this.getPerson(this.props.id1);
     }
+    this.setState({
+      message: ""  
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -54,6 +55,19 @@ export default class EltuntSzemely extends Component {
       if (id) {
         this.getPerson(id);
       }
+    } else if (this.props.coor && this.props.coor !== prevProps.coor) {
+      console.log(`updated 'Eltunt' component with coordinate: ${this.props.coor}`);
+      this.setState({
+        szemely: {
+          tipus: false,
+          id: null,
+          nem: "",
+          eletkor: "",
+          eltunesIdeje: "",
+          jelzes: "",
+          ugyszam: "",
+        }
+      });
     }
   }
 
@@ -112,32 +126,13 @@ export default class EltuntSzemely extends Component {
       };
     });
   }
-  onChangeX(x) {
-    this.setState(function(prevState) {
-      return {
-        szemely: {
-          ...prevState.szemely,
-          x: x
-        }
-      };
-    });
-  }
-  onChangeY(y) {
-    this.setState(function(prevState) {
-      return {
-        szemely: {
-          ...prevState.szemely,
-          y: y
-        }
-      };
-    });
-  }
 
   getPerson(id) {
     PersonService.get(id)
       .then(response => {
         this.setState({
-          szemely: response.data
+          szemely: response.data,
+          message: ""
         });
         console.log(response.data);
       })

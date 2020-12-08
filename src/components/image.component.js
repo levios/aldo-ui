@@ -21,6 +21,7 @@ class ImageBox extends React.Component {
             image:  null,
             imageCount: 0,
             image64: null,
+            imageName: "",
             isViewerOpen: false
         };
     }
@@ -70,7 +71,8 @@ class ImageBox extends React.Component {
         PersonService.getImage(id)
         .then(response => {
             this.setState({
-                image: response.data[0].picByte
+                image: response.data[0].picByte,
+                imageName: response.data[0].name
             });
             console.log(response.data);
             console.log(`pic_byte: ${response.data[0].picByte}`);
@@ -121,11 +123,15 @@ class ImageBox extends React.Component {
                                 }]
                         } /> */}
 
-
+                    {/* https://www.npmjs.com/package/react-viewer/v/3.0.0 */}
                         <Viewer
                             visible={true}
                             onClose={this.closeImageViewer}
-                            images={[{src: this.state.image64, alt: 'image title'}]}
+                            images={[ {src: this.state.image64, alt: this.state.imageName} ]}
+                            noToolbar={false}
+                            rotatable={false}
+                            scalable={false}
+                            zoomable={false}
                             />
 
                     </div>

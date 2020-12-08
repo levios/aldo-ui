@@ -2,8 +2,10 @@
     min-width: 600px;
     min-height: 500px;
     margin: 0px;
+    /* margin-right: 10px; */
     height: 100%; 
     position: relative;
+    /* position: absolute; */
     width: 100%;
 }
 
