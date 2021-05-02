@@ -2,9 +2,9 @@ import React, { useRef, useState, useEffect } from "react"
 import "./Map.css";
 import MapContext from "./MapContext";
 import * as ol from "ol";
-import ImageLayer from 'ol/layer/Image.js';
+/* import ImageLayer from 'ol/layer/Image.js';
 import Projection from 'ol/proj/Projection.js';
-import Static from 'ol/source/ImageStatic.js';
+import Static from 'ol/source/ImageStatic.js'; */
 import Feature from 'ol/Feature.js';
 import Point from 'ol/geom/Point.js';
 //import {Tile as TileLayer, Vector as VectorLayer} from 'ol/layer.js';

@@ -23,7 +23,6 @@ class ListLayer extends React.Component {
 
         return (
             this.props.selectedId && this.props.persons && this.props.persons.map((p, idx) => {
-                // var routeCoords = evt.coordinate;
                 var routeCoords = [p.x, p.y];
                 
                 var geoMarker = new Feature({
@@ -31,7 +30,6 @@ class ListLayer extends React.Component {
                     geometry: new Point(routeCoords)
                 });
 
-                // talalt_szemeny = true, eltunt_szemely = false
                 var sty = p.tipus ? new Style({
                     image: new Icon({
                     anchor: [0.5, 1],

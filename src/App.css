@@ -44,3 +44,9 @@
 .form-group {
     margin-bottom: .5rem;
 }
+
+.version-bar {
+    float: right;
+    vertical-align: top;
+    color: white;
+  }

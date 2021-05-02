@@ -96,9 +96,6 @@ class ImageBox extends React.Component {
 
     render() {
       return (
-/*             <div className="grid-box" onMouseOver={this.mouseOver} onMouseOut={this.mouseOut}>
-            {this.state.hover ? (<img src={Eyecon}/>) : <div>Link</div>}       
-            </div> */
             <div>
                 {this.state.imageCount ? (
                     <button onClick={this.openImageViewer} >Megnyitás</button>
@@ -109,21 +106,6 @@ class ImageBox extends React.Component {
 
                {(this.state.imageCount && this.state.isViewerOpen) ? (
                     <div>
-{/*                         <ImageViewer
-                            src={ [this.state.image64] } //  this.state.image
-                            currentIndex={ 1 }
-                            onClose={this.closeImageViewer}
-                        /> */}
-
-{/*                       <Lightbox images={[
-                                {
-                                src: this.state.image64,
-                                title: 'image title',
-                                description: 'image description'
-                                }]
-                        } /> */}
-
-                    {/* https://www.npmjs.com/package/react-viewer/v/3.0.0 */}
                         <Viewer
                             visible={true}
                             onClose={this.closeImageViewer}
