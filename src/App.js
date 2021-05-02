@@ -27,7 +27,11 @@ import FormLabel from '@material-ui/core/FormLabel';
 import Feature from 'ol/Feature.js';
 import Point from 'ol/geom/Point.js';
 import PersonService from "./services/person.service";
-
+/**
+ * https://getbootstrap.com/docs/4.0/utilities/sizing/
+ * https://getbootstrap.com/docs/4.0/utilities/spacing/
+ * 
+ */
 let styles = {
 	'Point': new Style({
 		image: new CircleStyle({
@@ -181,18 +185,29 @@ const geojsonObject2 = {
 };
 
 const App = () => {
-	const [center, setCenter] = useState([18.23333, 46.08333]); // location: Pecs
+	const version = "1.0.0";
+	 // default starting location: Pecs
+	const [center, setCenter] = useState([18.23333, 46.08333]);
 	const [zoom, setZoom] = useState(10);
 /* 	const [showLayer1, setShowLayer1] = useState(true);
 	const [showLayer2, setShowLayer2] = useState(true); */
 
 	const [persons, setPersons] = useState([]);
+	
+	// Persons matched by the Search Term
+	const [personsMatched, setPersonsMatched] = useState([]);
 
 	const [selectedId, setSelectedId] = useState(-1);
 
-	const [szemelyTipus, setSzemelyTipus] = useState(true); // talalt_szemeny = true, eltunt_szemely = false
+	// getter/setter for szemely tipus
+	// talalt_szemeny = true, eltunt_szemely = false
+	const [szemelyTipus, setSzemelyTipus] = useState(true);
 
+	// getter/setter for selected coordinates
 	const [coord, setCoord] = useState(undefined);
+
+	// getter/setter for Search term
+	const [searchTerm, setSearchTerm] = useState("");
 
 	const cb = (id) =>  {
 		console.log("callback was called");
@@ -224,6 +239,7 @@ const App = () => {
 		PersonService.getAll()
 		.then(response => {
 			setPersons(response.data);
+			setPersonsMatched(response.data);
 		  	console.log(response.data);
 		})
 		.catch(e => {
@@ -231,10 +247,41 @@ const App = () => {
 		});
 	}
 
+	const handleSearchInputChanged = (e) => {
+		console.log(`Input changed:  ${e.target.value}`);
+		const newSearchTerm = e.target.value;
+		setSearchTerm(newSearchTerm);
+
+		setPersonsMatched(persons.filter(p => 
+			!newSearchTerm
+			||
+			(p.ugyszam && p.ugyszam.includes(newSearchTerm))
+			||
+			(p.nem && p.nem.includes(newSearchTerm))
+			||
+			(p.halalBecsultIdeje && p.halalBecsultIdeje.includes(newSearchTerm))
+			||
+			(p.megtalalasIdeje && p.megtalalasIdeje.includes(newSearchTerm))
+			||
+			(p.jelzes && p.jelzes.includes(newSearchTerm))
+			||
+			(p.eletkor && p.eletkor.includes(newSearchTerm))
+			||
+			(p.eltunesIdeje && p.eltunesIdeje.includes(newSearchTerm))
+			||
+			(p.becsultEletkor && p.becsultEletkor.includes(newSearchTerm))
+			||
+			(p.becsultEletkor && p.becsultEletkor.includes(newSearchTerm))
+		));
+		console.log("Persons matched:");
+		console.log(personsMatched);
+	 }
+
 	useEffect(() => {
 		PersonService.getAll()
 		.then(response => {
 			setPersons(response.data);
+			setPersonsMatched(response.data);
 		  	console.log(response.data);
 		})
 		.catch(e => {
@@ -245,34 +292,56 @@ const App = () => {
 	return (
 		<div>
 			<nav className="navbar navbar-expand navbar-dark bg-dark">
-			<a href="/" className="navbar-brand">
-			ALDO
-			</a>
-			<div className="navbar-nav mr-auto">
-{/* 				<li className="nav-item">
-					<Link to={"/"} className="nav-link">
-					Competitor
-					</Link>
-				</li> */}
-			</div>
+				<a href="/" className="navbar-brand">
+				ALDO
+				</a>
+				<div className="navbar-nav mr-auto"></div>
+				<div className="version-bar">
+					Verzió: {version}
+				</div>
 			</nav>
 
+{/* h-100 = height 100%, mt = margin top, mr = margin right */}
 			<div className="container-fluid mt-2 mr-2 h-100">
 				<Row className="h-100">
 					<Col xs={3}>
+						<div className="input-group">
+							<input
+								type="text"
+								className="form-control"
+								placeholder="Keresés..."
+								value={searchTerm}
+								onChange={handleSearchInputChanged} 
+							/>
+						</div>
+					</Col>
+					<Col xs={9}>
+						<div className="my-label MuiTypography-body1">Új személy felvétele: Körözés típusa:</div>
+						<FormControl component="fieldset">
+ 							<RadioGroup row aria-label="position"
+							 	name="position"
+							 	defaultValue="talalt_szemely"
+ 								onChange={(c) => radioChanged(c)} >
+								<FormControlLabel
+								value="talalt_szemely"
+								control={<Radio color="primary" />}
+								label="Talált holttest"
+								labelPlacement="start"
+								/>
+								<FormControlLabel
+								value="eltunt_szemely"
+								control={<Radio color="primary" />}
+								label="Eltűnt személy"
+								labelPlacement="start"
+								/>
+							</RadioGroup>
+						</FormControl>
+					</Col>
+				</Row>
+				<Row className="h-100">
+					<Col xs={3}>
 						<div className="div1">
-							<PersonList cb1={(id) => cb(id)} persons={persons} />
-							{/*<BrowserRouter>
-								<Switch>
-									<Route exact path={["/", "/persons"]} component={PersonList} />
-									<Route exact path="/add" component={AddCompetitor} />
-									<Route path="/competitor/:id" component={Competitor} />
-									<Route path="/competitors/:id" component={(props) => CompetitorTable(props)} />
-									<Route path="/occupancy/:id" component={OccupancyList} /> 
-								</Switch>
-							</BrowserRouter>
-								<AddTutorial />
-							<PersonList /> */}
+							<PersonList cb1={(id) => cb(id)} persons={personsMatched} />
 						</div>
 						<div className="div2">
 							{ (selectedId == -1 && !coord) ? (
@@ -293,84 +362,14 @@ const App = () => {
 
 					</Col>
 					<Col xs={9}>
-						<div className="my-label MuiTypography-body1">Körözés típusa:</div>
-						<FormControl component="fieldset">
-{/* 							<FormLabel component="legend">Körözés típusa</FormLabel>
- */}							<RadioGroup row aria-label="position" name="position" defaultValue="talalt_szemely" onChange={(c) => radioChanged(c)}
-							>
-								<FormControlLabel
-								value="talalt_szemely"
-								control={<Radio color="primary" />}
-								label="Talált holttest"
-								labelPlacement="start"
-								/>
-								<FormControlLabel
-								value="eltunt_szemely"
-								control={<Radio color="primary" />}
-								label="Eltűnt személy"
-								labelPlacement="start"
-								/>
-							</RadioGroup>
-						</FormControl>
 						<Map 
 							center={fromLonLat(center)} 
 							zoom={zoom} 
 							szemely_type={szemelyTipus} 
 							cb1={(id) => mapCB(id)} 
 							selectedId={selectedId} 
-							persons={persons}
+							persons={personsMatched}
 						>
-{/* 							<Layers>
-								<TileLayer
-									source={osm()}
-									zIndex={0}
-								/>
-
-								<ListLayer persons={persons} selectedId={selectedId} /> */}
-								{/* {persons && persons.map((p, idx) => {
-									// var routeCoords = evt.coordinate;
-									var routeCoords = [p.x, p.y];
-									
-									var geoMarker = new Feature({
-										type: 'geoMarker',
-										geometry: new Point(routeCoords)
-									});
-
-									const skull = '/skull.png';
-									const skull_blue = '/skull_blue.png';
-									const qmark = '/qmark.png';
-									const qmark_blue = '/qmark_blue.png';
-
-									// talalt_szemeny = true, eltunt_szemely = false
-									var sty = p.tipus ? new Style({
-										image: new Icon({
-										  anchor: [0.5, 1],
-										  src: (p.id == selectedId) ? skull_blue : skull
-										})
-									}) : new Style({
-										image: new Icon({
-										  anchor: [0.5, 1],
-										  src: (p.id == selectedId) ? qmark_blue : qmark
-										})
-									});
-
-									return  (
-										<VectorLayer
-											source={new VectorSource({
-											  features: [geoMarker]
-											})}
-
-											style={sty}
-
-											key={idx}
-										 />
-									)
-								})
-								} */}
-{/* 							</Layers>
-							<Controls>
-								<FullScreenControl />
-							</Controls> */}
 						</Map>
 					</Col>
 				</Row>
